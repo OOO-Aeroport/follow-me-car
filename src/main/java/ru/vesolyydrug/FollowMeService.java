@@ -52,7 +52,7 @@ public class FollowMeService {
 
 
     private void sendUnoSuccess(long orderId) {
-        String url = "http://26.53.143.176/uno/api/v1/order/successReport/"+ orderId +"/follow-me";
+        String url = "http://26.53.143.176:5555/uno/api/v1/order/successReport/"+ orderId +"/follow-me";
         restTemplate.getForObject(url, Void.class);
     }
 
@@ -62,7 +62,7 @@ public class FollowMeService {
     }
 
     private Integer requestPlaneParkingSpot(int planeId) {
-        String url = "http://26.125.155.211:5555/follow-me/" + planeId; //todo url для получения перрона у самолета
+        String url = "http://26.125.155.211:5555/follow-me/" + planeId;
         String object = restTemplate.getForObject(url, String.class);
         return Integer.parseInt(object);
     }
@@ -128,7 +128,7 @@ public class FollowMeService {
     }
 
     private void sendPlaneNewPosition(int initialPosition, int planeId) {
-        String url = "http://26.125.155.211:5555/update_location/" + planeId; //todo URL самолета, который принимает свою новую позицию
+        String url = "http://26.125.155.211:5555/update_location/" + planeId;
         restTemplate.postForEntity(url, initialPosition, Void.class);
     }
 
