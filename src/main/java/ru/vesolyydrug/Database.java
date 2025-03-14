@@ -11,6 +11,11 @@ public class Database {
         cars.add(new FollowMeCar(1, 0));
         cars.add(new FollowMeCar(2, 0));
         cars.add(new FollowMeCar(3, 0));
+        cars.add(new FollowMeCar(4, 0));
+        cars.add(new FollowMeCar(5, 0));
+        cars.add(new FollowMeCar(6, 0));
+        cars.add(new FollowMeCar(7, 0));
+        cars.add(new FollowMeCar(8, 0));
     }
 
     public FollowMeCar getAvailableCar() {

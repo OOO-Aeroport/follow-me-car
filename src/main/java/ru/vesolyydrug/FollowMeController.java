@@ -13,9 +13,9 @@ public class FollowMeController {
         this.followMeService = followMeService;
     }
 
-    @PostMapping("/handle-new-plane/{plane-id}")
-    public String handleNewPlane(@PathVariable("plane-id") int planeId) {
-        followMeService.handleNewPlane(planeId);
+    @GetMapping("/handle-new-plane/{plane-id}/{order-id}")
+    public String handleNewPlane(@PathVariable("plane-id") int planeId, @PathVariable("order-id") long orderId) {
+        followMeService.handleNewPlane(planeId, orderId);
         return "FollowMeCar is handling the new plane: " + planeId;
     }
 }

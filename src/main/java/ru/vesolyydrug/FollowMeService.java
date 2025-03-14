@@ -17,8 +17,8 @@ public class FollowMeService {
         this.restTemplate = restTemplate;
     }
 
-    public void handleNewPlane(int planeId) {
-        FollowMeCar car = database.getAvailableCar(); //todo Сделать так -> если машинки нет, создаем её и кладем в БД, когда их 3 больше не создаем а отправляем существующие у которых статус не in-progress
+    public void handleNewPlane(int planeId, long orderId) {
+        FollowMeCar car = database.getAvailableCar();
         if (car == null) {
             System.out.println("No available FollowMeCar.");
             return;
@@ -43,8 +43,18 @@ public class FollowMeService {
         followRoute(car, routeToParkingSpot);
 
         sendTransportationEndStatus();
-        sendUnoSuccess();
+        sendUnoSuccess(orderId);
 
+    }
+
+    private void sendTransportationEndStatus() {
+        String url = "";
+        restTemplate.getForObject();
+    }
+
+    private void sendUnoSuccess(long orderId) {
+        String url = "http:// /uno/api/v1/order/successReport/"+ orderId +"/follow-me";
+        restTemplate.getForObject(url, Void.class);
     }
 
     private List<Integer> requestRouteForParkingSpot(int currentPosition, int destination) {
