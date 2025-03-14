@@ -8,6 +8,8 @@ public class FollowMeCar {
     private int currentPlane;
     private int currentDestinationPoint;
 
+    private int currentPlanePosition;
+
     public FollowMeCar(int id, int currentPosition) {
         this.id = id;
         this.currentPosition = currentPosition;
@@ -56,5 +58,13 @@ public class FollowMeCar {
 
     public void setCurrentDestinationPoint(int currentDestinationPoint) {
         this.currentDestinationPoint = currentDestinationPoint;
+    }
+
+    public int getCurrentPlanePosition() {
+        return currentPlanePosition;
+    }
+
+    public void setCurrentPlanePosition(int currentPlanePosition) {
+        this.currentPlanePosition = currentPlanePosition;
     }
 }

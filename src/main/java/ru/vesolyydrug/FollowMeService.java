@@ -26,7 +26,7 @@ public class FollowMeService {
 
         car.setAvailable(false);
         car.setDestination(Destination.PLANE);
-
+        car.setCurrentPlane(planeId);
         while (!requestInitialPosition()) {
         }
 
@@ -34,70 +34,60 @@ public class FollowMeService {
 
         List<Integer> routeToPlane = requestRouteToPlaneOnRunway(car.getCurrentPosition(), planeId);
         car.setCurrentDestinationPoint(routeToPlane.getLast());
+        car.setCurrentPlanePosition(routeToPlane.getLast());
         followRoute(car, routeToPlane);
 
-        int destination = requestPlaneParkingSpot();
+        int destination = requestPlaneParkingSpot(planeId);
         List<Integer> routeToParkingSpot = requestRouteForParkingSpot(car.getCurrentPosition(), destination);
+        routeToParkingSpot.add(routeToParkingSpot.getLast() - 1);
         car.setCurrentDestinationPoint(routeToParkingSpot.getLast());
         car.setDestination(Destination.GATE);
+        routeToParkingSpot.remove(0);
         followRoute(car, routeToParkingSpot);
 
-        sendTransportationEndStatus();
+//        sendTransportationEndStatus();
         sendUnoSuccess(orderId);
 
     }
 
-    private void sendTransportationEndStatus() {
-        String url = "";
-        restTemplate.getForObject();
-    }
 
     private void sendUnoSuccess(long orderId) {
-        String url = "http:// /uno/api/v1/order/successReport/"+ orderId +"/follow-me";
+        String url = "http://26.53.143.176/uno/api/v1/order/successReport/"+ orderId +"/follow-me";
         restTemplate.getForObject(url, Void.class);
     }
 
     private List<Integer> requestRouteForParkingSpot(int currentPosition, int destination) {
-        String url = "http://localhost:8080/dispatcher/plane/follow-me/" + currentPosition + "/" + destination;
+        String url = "http://26.21.3.228:5555/dispatcher/plane/follow-me/" + currentPosition + "/" + destination;
         return restTemplate.getForObject(url, List.class);
     }
 
-    private Integer requestPlaneParkingSpot() {
-        String url = ""; //todo url для получения перрона у самолета
-        return restTemplate.getForObject(url, Integer.class);
+    private Integer requestPlaneParkingSpot(int planeId) {
+        String url = "http://26.125.155.211:5555/follow-me/" + planeId; //todo url для получения перрона у самолета
+        String object = restTemplate.getForObject(url, String.class);
+        return Integer.parseInt(object);
     }
 
     private boolean requestInitialPosition() {
-        String url = "http://localhost:8080/dispatcher/garage/follow_me";
+        String url = "http://26.21.3.228:5555/dispatcher/garage/follow_me";
         return restTemplate.getForObject(url, Boolean.class);
     }
 
-    private List<Integer> requestRoute(int startPosition, int targetPosition) {
-        String url = "http://localhost:8080/dispatcher/route?start=" + startPosition + "&target=" + targetPosition;
-        return restTemplate.getForObject(url, List.class);
-    }
 
     private List<Integer> requestRouteToPlaneOnRunway(int startPosition, int planeId) {
-        String url = "http://localhost:8080/dispatcher/plane/runway/" + startPosition + "/" + planeId;
+        String url = "http://26.21.3.228:5555/dispatcher/plane/runway/" + startPosition + "/" + planeId;
         return restTemplate.getForObject(url, List.class);
     }
 
-    private int getPlanePosition(String planeId) {
-        String url = "http://localhost:8080/ground-service/plane-position/" + planeId;
-        return restTemplate.getForObject(url, Integer.class);
-    }
-
-    private int getServicePosition(String planeId) {
-        String url = "http://localhost:8080/ground-service/service-position/" + planeId;
-        return restTemplate.getForObject(url, Integer.class);
-    }
 
     private void followRoute(FollowMeCar car, List<Integer> route) {
         for (int point : route) {
             int attempts = 0;
             while (attempts < 5) {
-                boolean requestPermissionToMove = car.getDestination() == Destination.GATE? requestPermissionToMoveToGate(car.getCurrentPosition(), point, car.getCurrentPlane()): requestPermissionToMove(car.getCurrentPosition(), point);
+                boolean requestPermissionToMove = car.getDestination() == Destination.GATE? requestPermissionToMoveToGate(car.getCurrentPosition(), point, car.getCurrentPlanePosition(), car.getCurrentPlane()): requestPermissionToMove(car.getCurrentPosition(), point);
                 if (requestPermissionToMove) {
+                    if (car.getDestination() == Destination.GATE) {
+                        car.setCurrentPlanePosition(car.getCurrentPosition());
+                    }
                     car.setCurrentPosition(point);
                     System.out.println("FollowMeCar " + car.getId() + " moved to position " + point);
                     break;
@@ -127,22 +117,23 @@ public class FollowMeService {
         }
     }
 
-    private boolean requestPermissionToMoveToGate(int initialPosition, int targetPosition, int planePosition) {
-        String url = "http://localhost:8080/ground-service/plane/follow-me/permission/" + initialPosition +"/" + targetPosition +"/" + planePosition;
+    private boolean requestPermissionToMoveToGate(int initialPosition, int targetPosition, int planePosition, int planeId) {
+        String url = "http://26.21.3.228:5555/dispatcher/plane/follow-me/permission/" + initialPosition +"/" + targetPosition +"/" + planePosition;
         boolean canGo = restTemplate.getForObject(url, Boolean.class);
         if (canGo) {
-            sendPlaneNewPosition(initialPosition);
+            sendPlaneNewPosition(initialPosition, planeId);
+            return true;
         }
         return false;
     }
 
-    private void sendPlaneNewPosition(int initialPosition) {
-        String url = ""; //todo URL самолета, который принимает свою новую позицию
+    private void sendPlaneNewPosition(int initialPosition, int planeId) {
+        String url = "http://26.125.155.211:5555/update_location/" + planeId; //todo URL самолета, который принимает свою новую позицию
         restTemplate.postForEntity(url, initialPosition, Void.class);
     }
 
     private boolean requestPermissionToMove(int initialPosition, int targetPosition) {
-        String url = "http://localhost:8080/dispatcher/point/" + initialPosition + "/" + targetPosition;
+        String url = "http://26.21.3.228:5555/dispatcher/point/" + initialPosition + "/" + targetPosition;
         return restTemplate.getForObject(url, Boolean.class);
     }
 }
