@@ -14,7 +14,7 @@ public class FollowMeController {
     }
 
     @GetMapping("/handle-new-plane/{plane-id}/{order-id}")
-    public String handleNewPlane(@PathVariable("plane-id") int planeId, @PathVariable("order-id") long orderId) {
+    public String handleNewPlane(@PathVariable("plane-id") int planeId, @PathVariable("order-id") int orderId) {
         followMeService.handleNewPlane(planeId, orderId);
         return "FollowMeCar is handling the new plane: " + planeId;
     }
