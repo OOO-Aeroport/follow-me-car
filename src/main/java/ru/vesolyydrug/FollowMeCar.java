@@ -5,11 +5,8 @@ import java.util.List;
 import java.util.Queue;
 
 public class FollowMeCar {
-    private int carId;
     private int orderId;
     private int currentPosition;
-    private boolean isAvailable;
-    private Destination destination;
     private int currentPlaneId;
     private int currentDestinationPoint;
 
@@ -24,13 +21,6 @@ public class FollowMeCar {
         this.currentPlaneId = currentPlaneId;
     }
 
-    public int getCarId() {
-        return carId;
-    }
-
-    public void setCarId(int carId) {
-        this.carId = carId;
-    }
 
     public int getOrderId() {
         return orderId;
@@ -46,22 +36,6 @@ public class FollowMeCar {
 
     public void setCurrentPosition(int currentPosition) {
         this.currentPosition = currentPosition;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
-
-    public Destination getDestination() {
-        return destination;
-    }
-
-    public void setDestination(Destination destination) {
-        this.destination = destination;
     }
 
     public int getCurrentPlaneId() {
@@ -84,9 +58,6 @@ public class FollowMeCar {
         return route;
     }
 
-    public void setRoute(Queue<Integer> route) {
-        this.route = route;
-    }
 
     public int getCurrentPlanePosition() {
         return currentPlanePosition;

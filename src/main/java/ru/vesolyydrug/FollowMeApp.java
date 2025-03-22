@@ -13,11 +13,6 @@ public class FollowMeApp {
     }
 
     @Bean
-    public Database database() {
-        return new Database();
-    }
-
-    @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
