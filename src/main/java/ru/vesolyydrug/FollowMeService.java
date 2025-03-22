@@ -17,38 +17,24 @@ public class FollowMeService {
     }
 
     public void handleNewPlane(int planeId, int orderId) {
-
         FollowMeCar followMeCar = new FollowMeCar(orderId, planeId);
-
         cars.add(followMeCar);
-
         followMeOrder(followMeCar);
 
     }
 
     public void followMeOrder(FollowMeCar car)  {
         leaveGarage(car);
-
         takeANap(70);
-
         System.out.println("planeId: " + car.getCurrentPlaneId() + ". Нужно подъехать к самолету.");
-
         car.setRoutePoints(requestRouteToPlaneOnRunway(car.getCurrentPosition(), car.getCurrentPlaneId()));
         followTheRoute(car, "garageToPlaneOnRunway");
-
         takeANap(300);
-
         car.setCurrentPlanePosition(requestCurrentPlanePos(car.getCurrentPlaneId()));
-
-
         Integer destination = requestPlaneParkingSpot(car.getCurrentPlaneId());
-
         car.setCurrentDestinationPoint(destination);
-
         car.setRoutePoints(requestRouteForParkingSpot(car.getCurrentPosition(), car.getCurrentDestinationPoint()));
-
         followTheRoute(car, "runwayToPerron");
-
         sendUnoSuccess(car.getOrderId());
         System.out.println("planeId: " + car.getCurrentPlaneId() + ". Заказ выполнен. Нужно ехать к гаражу.");
         car.setRoutePoints(requestRouteToGarage(car.getCurrentPosition()));
@@ -57,12 +43,6 @@ public class FollowMeService {
         requestDeleteCarFromMap(car.getCurrentPosition());
         cars.remove(car);
         System.out.println("Машина заехала в гараж");
-    }
-
-    private int requestCurrentPlanePos(int planeId) {
-        String url = "http://26.125.155.211:5555/current-point/" + planeId;
-        String template = restTemplate.getForObject(url, String.class);
-        return Integer.parseInt(template);
     }
 
     public void leaveGarage(FollowMeCar car) {
@@ -130,6 +110,12 @@ public class FollowMeService {
                 }
             }
         }
+    }
+
+    private int requestCurrentPlanePos(int planeId) {
+        String url = "http://26.125.155.211:5555/current-point/" + planeId;
+        String template = restTemplate.getForObject(url, String.class);
+        return Integer.parseInt(template);
     }
 
     private void sendUnoSuccess(long orderId) {
