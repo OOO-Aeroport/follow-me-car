@@ -2,6 +2,8 @@ package ru.vesolyydrug;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/follow-me")
 public class FollowMeController {
@@ -15,5 +17,10 @@ public class FollowMeController {
     public String handleNewPlane(@PathVariable("plane-id") int planeId, @PathVariable("order-id") int orderId) {
         followMeService.handleNewPlane(planeId, orderId);
         return "FollowMeCar обрабатывает новый самолет: " + planeId;
+    }
+
+    @GetMapping("/get-all-cars")
+    public List<FollowMeCar> getAllCars() {
+        return followMeService.getCars();
     }
 }

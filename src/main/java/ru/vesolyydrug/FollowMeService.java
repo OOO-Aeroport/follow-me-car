@@ -188,4 +188,12 @@ public class FollowMeService {
         String url = "http://26.34.23.177:5555/dispatcher/point/" + initialPosition + "/" + targetPosition;
         return restTemplate.getForObject(url, Boolean.class);
     }
+
+    public List<FollowMeCar> getCars() {
+        return cars;
+    }
+
+    public void setCars(List<FollowMeCar> cars) {
+        this.cars = cars;
+    }
 }
